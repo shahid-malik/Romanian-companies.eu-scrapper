@@ -7,6 +7,8 @@
 
 import scrapy
 
+from scrapy.item import Item, Field
+
 
 class RomanianCompaniesEuItem(scrapy.Item):
     # define the fields for your item here like:
@@ -14,10 +16,9 @@ class RomanianCompaniesEuItem(scrapy.Item):
     pass
 
 
-from scrapy.item import Item, Field
-
 class CompanyItem(scrapy.Item):
+    id = scrapy.Field()
+    category = Field()
     name = scrapy.Field()
     url = scrapy.Field()
-    desc = scrapy.Field()
-    category = scrapy.Field()
+    pass
