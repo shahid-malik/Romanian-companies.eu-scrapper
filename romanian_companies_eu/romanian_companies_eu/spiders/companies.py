@@ -16,22 +16,17 @@ class CompaniesSpider(CrawlSpider):
         url = "https://www.romanian-companies.eu/%s/d1.htm" % str(page).zfill(2)
         start_urls.append(url)
 
-    # start_urls = get_start_urls(10)
     rules = (
         Rule(LinkExtractor(restrict_xpaths="(//div[@class='text-center']/ul/li)"), callback="parse_item"),
     )
 
-    # def start_requests(self):
-    #     for page in range (1,100):
-    #         yield Request("https://www.romanian-companies.eu/%s/d1.htm" % str(page).zfill(2))
-
     # def parse_item(self, response):
     #     try:
     #         page_num = int((str(response).split('/')[-1]).split('.')[0][1:])
-    #         with open('test.csv', 'a') as f:
-    #             f.write(str(page_num))
-    #             f.write('\n')
-    #
+    #         # with open('test.csv', 'a') as f:
+    #         #     f.write(str(page_num))
+    #         #     f.write('\n')
+    #         print(response.url)
     #         yield scrapy.Request(url=response.url, dont_filter=True)
     #     except Exception as e:
     #         print("Exceptions", e)
@@ -44,7 +39,7 @@ class CompaniesSpider(CrawlSpider):
             company_id = str(response.css('span.label.label-info::text').extract()[1])[0:2]
             company_urls = response.css('tr.clickable-row a::attr(href)').extract()
             company_names = response.css('tr.clickable-row a::attr(title)').extract()
-
+            yield scrapy.Request(url=response.url, dont_filter=True)
         except Exception as e:
             print(e)
             company_category = int(str(response).split('/')[-2])
@@ -53,7 +48,6 @@ class CompaniesSpider(CrawlSpider):
             item['url'] = str('https://www.romanian-companies.eu'+url).strip()
             item['id'] = company_id
             item['category'] = str(company_category).strip()
-
             # dir_path = self.create_data_directory()
             # file_name = self.create_company_file(company_category, dir_path)
             yield item
