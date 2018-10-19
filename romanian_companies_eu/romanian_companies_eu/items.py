@@ -20,5 +20,9 @@ class CompanyItem(scrapy.Item):
     id = scrapy.Field()
     category = Field()
     name = scrapy.Field()
+    website = scrapy.Field()
     url = scrapy.Field()
+    status = scrapy.Field()
+    url2 = scrapy.Field()
+    web_addr =scrapy.Field()
     pass
