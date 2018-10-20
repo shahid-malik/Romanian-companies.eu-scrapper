@@ -20,15 +20,11 @@ class CompanyPipeline(object):
 
     def process_item(self, item, spider):
         try:
-            query = "INSERT INTO company (id, name, website, parent_company)  VALUES " \
-                    "(%s, "'"%s"'", "'"%s"'", "'"%s"'")" % (
-                item['id'].encode('utf-8'),
-                str(item['name'].encode('utf-8')),
-                str(item['url'].encode('utf-8')),
-                str(item['category'].encode('utf-8'))
+            query = "INSERT INTO company2 (name, website)  VALUES " \
+                    "("'"%s"'", "'"%s"'")" % (str(item['name'].encode('utf-8')),
+                                              str(item['website'].encode('utf-8'))
             )
             print(query)
-
             self.cursor.execute(query)
             self.conn.commit()
         except MySQLdb.Error, e:
@@ -49,7 +45,7 @@ class CompanyURLPipeline(object):
             web_addr = str(item['web_addr'].encode('utf-8'))
             status = str(item['status'].encode('utf-8'))
 
-            query = "UPDATE company SET url2 = '%s', web_addr = '%s', status= '%s' where website= '%s' " \
+            query = "UPDATE company2 SET url2 = '%s', web_addr = '%s', status= '%s' where website= '%s' " \
                     % (url2, web_addr, status, website)
             print(query)
 
@@ -72,7 +68,7 @@ class CompanyImageURLPipeline(object):
             web_addr = str(item['web_addr'].encode('utf-8'))
             status = str(item['status'].encode('utf-8'))
 
-            query = "UPDATE company SET web_addr = '%s', status= '%s' where website= '%s' " \
+            query = "UPDATE company2 SET web_addr = '%s', status= '%s' where website= '%s' " \
                     % (web_addr, status, website)
             print(query)
 

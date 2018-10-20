@@ -22,7 +22,7 @@ class CompaniesURLSpider(CrawlSpider):
 
     def start_requests(self):
         try:
-            query = "select website from company where status is null ORDER BY id asc limit 10000"
+            query = "select website from company2 where status is null ORDER BY id desc limit 1000000"
             self.cursor.execute(query)
             numrows = self.cursor.rowcount
             for x in xrange(0, numrows):
