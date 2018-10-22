@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import MySQLdb
-from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import Rule, CrawlSpider
 from romanian_companies_eu.items import CompanyItem
 
@@ -22,30 +21,28 @@ class CompaniesURLSpider(CrawlSpider):
 
     def start_requests(self):
         try:
-            query = "select website from company2 where status is null ORDER BY id desc limit 1000000"
+            query = "select website from company2 where status is null"
             self.cursor.execute(query)
             numrows = self.cursor.rowcount
             for x in xrange(0, numrows):
                 row = self.cursor.fetchone()
                 detailed_pag_url = str(row[0])
                 yield scrapy.Request(url=detailed_pag_url, callback=self.parse)
-                if x == 40000:
-                    print("**** Counter is at **** ", x)
-                    break
         except MySQLdb.Error, e:
             print (e)
 
     def parse(self, response):
         item = CompanyItem()
         try:
-            company_top = str(response.css('h1#top::text')[0].extract())
+            try:
+                company_top = str(response.css('h1#top::text')[0].extract())
+            except:
+                company_top = str((response.css('h1#top::text')[0].extract()).encode('utf8'))
             try:
                 company_web = str(response.css('table#contact tr td::text')[-1].extract())
             except:
+                print('company Name web Address Exception')
                 company_web = 'Restricted'
-            # yield scrapy.Request(url=response.url, dont_filter=True)
-            if company_web == str("Web Address "):
-                print(response.url)
             item['website'] = str(response.url)
             item['url2'] = str(company_top).strip()
             item['web_addr'] = str(company_web).strip()
@@ -56,6 +53,6 @@ class CompaniesURLSpider(CrawlSpider):
             yield item
 
         except Exception as e:
-            print("Exception", e)
+            print("Parsing Exception", e)
 
 

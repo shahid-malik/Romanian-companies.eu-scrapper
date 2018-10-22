@@ -1,35 +1,32 @@
 # -*- coding: utf-8 -*-
-import os
 import scrapy
-from scrapy.linkextractors import LinkExtractor
-from scrapy.spiders import Rule, CrawlSpider
+from scrapy.spiders import CrawlSpider
 from romanian_companies_eu.items import CompanyItem
 from scrapy.http import Request
 
 
 class CompaniesSpider(CrawlSpider):
+    """This spider parse the romanian-companies.eu website and get all the urls of
+    indivdual companies which would be used later to scrape company urls"""
     name = 'companies'
     allowed_domains = ["www.romanian-companies.eu"]
 
-    # start_urls = [
-    #     "https://www.romanian-companies.eu/pagini/p2800.htm"
-    # ]
-    # rules = (
-    #     Rule(LinkExtractor(restrict_xpaths="(//div[@class='text-center']/ul/li)"), callback="parse_item"),
-    # )
     def start_requests(self):
+        """Send request to all the pages from 1 to 15334"""
         done_list = []
-        for x in xrange(11000, 15334):
+        for x in xrange(1, 15334):
             if x not in done_list:
-                print(x)
                 done_list.append(x)
                 yield Request('https://www.romanian-companies.eu/pagini/p'+str(x)+'.htm', dont_filter=True)
             else:
                 pass
 
     def parse(self, response):
+        """
+        Parse every single company url and send to the database
+        """
         item = CompanyItem()
-        if response.status !=200:
+        if response.status != 200:
             yield scrapy.Request(url=response.url, dont_filter=True)
 
         try:
@@ -39,6 +36,5 @@ class CompaniesSpider(CrawlSpider):
                 item['name'] = name
                 item['website'] = str('https://www.romanian-companies.eu'+url).strip()
                 yield item
-            # yield scrapy.Request(url=response.url, dont_filter=True)
         except Exception as e:
-            print("Exception: ", e)
+            print("Company url and Company name url get Exception: ", e)
