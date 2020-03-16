@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from scrapy.exceptions import DropItem
 import sys
 import MySQLdb
 import hashlib
-from scrapy.exceptions import DropItem
 from scrapy.http import Request
+from scrapy.exceptions import DropItem
+from scrapy.exceptions import DropItem
 
 
 class RomanianCompaniesEuPipeline(object):

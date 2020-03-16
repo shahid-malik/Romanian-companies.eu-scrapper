@@ -1,0 +1,10 @@
+*.pyc
+.*pyc
+.pyc*
+*.idea
+media/
+venv
+.idea/*
+db.sqlite3
+migrations/*
+.idea/modules.xml
